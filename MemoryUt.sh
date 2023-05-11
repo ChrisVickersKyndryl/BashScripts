@@ -2,15 +2,12 @@
 
 echo "Calculating memory utilization percentage..."
 
-# Retrieve memory information using 'free' command
-memory_info=$(free | awk 'NR==2{print $2,$3,$6,$7,$8}')
-
-# Separate memory values
-mem_total=$(echo $memory_info | awk '{print $1}')
-mem_free=$(echo $memory_info | awk '{print $2}')
-buffers=$(echo $memory_info | awk '{print $3}')
-cached=$(echo $memory_info | awk '{print $4}')
-sreclaimable=$(echo $memory_info | awk '{print $5}')
+MEM_INFO=$(cat /proc/meminfo)
+mem_total=$(echo $MEM_INFO | awk '{print $2}')
+mem_free=$(echo $MEM_INFO | awk '{print $5}')
+buffers=$(echo $MEM_INFO | awk '{print $11}')
+cached=$(echo $MEM_INFO | awk '{print $14}')
+sreclaimable=$(echo $MEM_INFO | awk '{print $71}')
 
 # Calculate memory utilization percentage
 mem_util_percentage=$(echo "scale=2; (100 * ($mem_total - ($mem_free + $buffers + $cached + $sreclaimable)) / $mem_total)" | bc)
